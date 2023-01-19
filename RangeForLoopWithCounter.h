@@ -65,4 +65,33 @@ public:
     bool operator!=(const IteratorCounter& rhs) const { return this->iterator != rhs.iterator; }
 };
 
+// For l-values, non owning
+template<typename IteratorType>
+class IteratorCounterRange_lval
+{
+private:
+    using Iterator = IteratorCounter<IteratorType>;
+    using IndexType = typename std::iterator_traits<IteratorType>::difference_type;
+    
+    IteratorType begin;
+    IteratorType end;
+    IndexType    offset;
+    
+public:
+    IteratorCounterRange_lval() = delete;
+    
+    explicit IteratorCounterRange_lval(IteratorType begin, IteratorType end, IndexType offset = 0)
+        : begin(begin)
+        , end(end)
+        , offset(offset)
+    {}
+};
+
+// For r-values, needs to be owning
+template<typename ContainerType, typename IteratorType>
+class IteratorCounterRange_rval
+{
+    
+};
+
 #endif
