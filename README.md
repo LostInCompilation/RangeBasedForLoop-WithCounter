@@ -1,6 +1,6 @@
 # Range-Based For Loop with a counter variable
 
-This small helper adds an integer counter/index variable to C++ Range-Based For Loops.
+This small, single header utility adds an integer counter/index variable to C++ Range-Based For Loops.
 
 ## Motivation
 Motivation

@@ -38,6 +38,7 @@ class IteratorCounter
 {
 private:
     using IndexType = typename std::iterator_traits<IteratorType>::difference_type;
+    using IteratorReferenceType = typename std::iterator_traits<IteratorType>::reference;
     
     IteratorType   iterator;
     IndexType      counter;
@@ -50,7 +51,18 @@ public:
         , counter(offset)
     {}
     
+    IteratorCounter& operator++()
+    {
+        iterator++;
+        counter++;
+        
+        return *this;
+    }
     
+    std::pair<IteratorReferenceType, const IndexType&> operator*() const { return {*iterator, counter}; }
+    
+    bool operator==(const IteratorCounter& rhs) const { return this->iterator == rhs.iterator; }
+    bool operator!=(const IteratorCounter& rhs) const { return this->iterator != rhs.iterator; }
 };
 
 #endif
