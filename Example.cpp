@@ -31,12 +31,69 @@
 */
 
 #include <iostream>
+#include <vector>
+#include <list>
 
 #include "RangeForLoopWithCounter.h"
 
 int main()
 {
     std::cout << "Range-Based for loop with counter - Example" << std::endl;
+    
+    //*************************************************************
+    // C-style array example
+    int arr[] = {42, 43, 44, 45, 46, 47};
+    
+    for(auto [value, index] : count(arr))
+        std::cout << value << ": " << index << std::endl;
+    
+    std::cout << std::endl << std::endl;
+    
+    //*************************************************************
+    // Vector example (l-value)
+    std::vector<std::string> vec = {"A", "B", "C", "D", "E", "F", "G"};
+    
+    for(auto [value, index] : count(vec))
+        std::cout << value << ": " << index << std::endl;
+    
+    std::cout << std::endl << std::endl;
+    
+    //*************************************************************
+    // Iterator example
+    for(auto [value, index] : count(vec.begin(), vec.begin() + 3))
+        std::cout << value << ": " << index << std::endl;
+    
+    std::cout << std::endl << std::endl;
+    
+    //*************************************************************
+    // List example (l-value) with an offset of 100 (index start at 100)
+    std::list<std::string> list = {"L1", "L2", "L3", "L4", "L5"};
+    
+    for(auto [value, index] : count(list, 100))
+        std::cout << value << ": " << index << std::endl;
+    
+    std::cout << std::endl << std::endl;
+    
+    //*************************************************************
+    // Vector example (r-value)
+    //for(auto [value, index] : count(std::vector<std::string>{"X", "Y", "Z"}))
+    //    std::cout << value << ": " << index << std::endl;
+    
+    std::cout << std::endl << std::endl;
+    
+    //*************************************************************
+    // Initializer List example (l-value)
+    std::initializer_list<int> init_lst = {5, 6, 7, 8, 9};
+    
+    for(auto [value, index] : count(init_lst))
+        std::cout << value << ": " << index << std::endl;
+    
+    std::cout << std::endl << std::endl;
+    
+    //*************************************************************
+    // Initializer List example (r-value)
+    //for(auto [value, index] : count({10, 9, 8, 7, 6}))
+    //    std::cout << value << ": " << index << std::endl;
     
     return 0;
 }
