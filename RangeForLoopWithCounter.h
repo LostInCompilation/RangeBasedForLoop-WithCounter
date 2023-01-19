@@ -33,5 +33,24 @@
 
 #include <iterator>
 
+template<typename IteratorType>
+class IteratorCounter
+{
+private:
+    using IndexType = typename std::iterator_traits<IteratorType>::difference_type;
+    
+    IteratorType   iterator;
+    IndexType      counter;
+    
+public:
+    IteratorCounter() = delete;
+    
+    explicit IteratorCounter(IteratorType it, IndexType offset = 0)
+        : iterator(it)
+        , counter(offset)
+    {}
+    
+    
+};
 
 #endif
