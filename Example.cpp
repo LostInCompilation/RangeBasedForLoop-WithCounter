@@ -76,10 +76,11 @@ int main()
     
     //*************************************************************
     // Vector example (r-value)
-    //for(auto [value, index] : count(std::vector<std::string>{"X", "Y", "Z"}))
-    //    std::cout << value << ": " << index << std::endl;
+    for(auto [value, index] : count(std::vector<std::string>{"X", "Y", "Z"}))
+        std::cout << value << ": " << index << std::endl;
     
     std::cout << std::endl << std::endl;
+    
     
     //*************************************************************
     // Initializer List example (l-value)
