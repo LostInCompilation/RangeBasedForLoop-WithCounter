@@ -32,6 +32,8 @@
 #define RANGE_FOR_LOOP_WITH_COUNTER_H
 
 #include <iterator>
+#include <vector>
+#include <initializer_list>
 
 template<typename IteratorType>
 class IteratorCounter
@@ -122,8 +124,6 @@ public:
     explicit IteratorCounterRange_rval(ContainerType&& container, const typename IteratorCounterRange_lval<IteratorType>::IndexType& offset = 0)
         : owner(container)
     {
-        std::cout << "Container r-val range" << std::endl;
-        
         IteratorCounterRange_lval<IteratorType>::offset = offset;
         
         IteratorCounterRange_lval<IteratorType>::first = std::begin(owner);
@@ -147,8 +147,6 @@ public:
     explicit IteratorCounterRange_rval(ContainerType&& container, const typename IteratorCounterRange_lval<IteratorType>::IndexType& offset = 0)
         : owner(container)
     {
-        std::cout << "List r-val range (special)" << std::endl;
-            
         IteratorCounterRange_lval<IteratorType>::offset = offset;
         
         IteratorCounterRange_lval<IteratorType>::first = std::begin(owner);
