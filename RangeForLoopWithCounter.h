@@ -106,7 +106,7 @@ concept ContainerIsInitializerList = not ContainerIsNotInitializerList<Container
 template<typename ContainerType, typename ContainerValueType = typename ContainerType::value_type>
 class IteratorCounterRange_rval;
 
-// For r-values, not std::initializer_list<T>
+// For r-Values, not std::initializer_list<T>
 template<ContainerIsNotInitializerList ContainerType, typename ContainerValueType>
 requires std::is_same_v<ContainerValueType, typename ContainerType::value_type>
 class IteratorCounterRange_rval<ContainerType, ContainerValueType> : public IteratorCounterRange_lval<typename ContainerType::iterator>
@@ -126,12 +126,12 @@ public:
         
         IteratorCounterRange_lval<IteratorType>::offset = offset;
         
-        IteratorCounterRange_lval<IteratorType>::first = std::begin(this->owner);
-        IteratorCounterRange_lval<IteratorType>::last = std::end(this->owner);
+        IteratorCounterRange_lval<IteratorType>::first = std::begin(owner);
+        IteratorCounterRange_lval<IteratorType>::last = std::end(owner);
     }
 };
 
-// For r-value std::initializer_list<T>. Special case since copying std::initializer_list is not advisable because of it's special properties
+// For r-Value std::initializer_list<T>. Special case since copying std::initializer_list is not advisable because of it's special properties
 template<ContainerIsInitializerList ContainerType, typename ContainerValueType>
 requires std::is_same_v<ContainerValueType, typename ContainerType::value_type>
 class IteratorCounterRange_rval<ContainerType, ContainerValueType> : public IteratorCounterRange_lval<typename std::vector<ContainerValueType>::iterator>
@@ -151,8 +151,8 @@ public:
             
         IteratorCounterRange_lval<IteratorType>::offset = offset;
         
-        IteratorCounterRange_lval<IteratorType>::first = std::begin(this->owner);
-        IteratorCounterRange_lval<IteratorType>::last = std::end(this->owner);
+        IteratorCounterRange_lval<IteratorType>::first = std::begin(owner);
+        IteratorCounterRange_lval<IteratorType>::last = std::end(owner);
     }
 };
 
@@ -173,7 +173,7 @@ decltype(auto) count(const IteratorType& first, const IteratorType& last, const 
 }
 
 //*******************************************************************************
-// L-Value container & L-Value std::initializer_list
+// l-Value container and l-Value std::initializer_list
 template<typename ContainerType>
 decltype(auto) count(ContainerType& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
 {
@@ -183,7 +183,7 @@ decltype(auto) count(ContainerType& container, const typename std::iterator_trai
 
 //*******************************************************************************
 //*******************************************************************************
-// R-Value container
+// r-Value container
 template<typename ContainerType>
 decltype(auto) count(ContainerType&& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
 {
@@ -191,7 +191,7 @@ decltype(auto) count(ContainerType&& container, const typename std::iterator_tra
 }
 
 //*******************************************************************************
-// R-Value std::initializer_list (special case).
+// r-Value std::initializer_list (special case).
 // Needed, since copying a std::initializer_list is not adviseable.
 // The list will be assigned to a std::vector, which will get counted
 template<typename T>
