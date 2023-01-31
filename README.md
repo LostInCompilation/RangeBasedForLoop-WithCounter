@@ -6,19 +6,19 @@
 
 ## Contents
 - [Simple example](#simple-example)
-- [Description](#desc)
+- [Description](#description)
     - [Motivation](#motivation)
-    - [Supported container types](#supported-types)
+    - [Supported container types](#supported-container-types)
 - [Usage](#usage)
-    - [Installation](#install)
-    - [Basic usage](#basic)
-        - [STL Container](#container)
+    - [Installation](#installation)
+    - [Basic usage](#basic-usage)
+        - [STL Container](#stl-container)
         - [Iterators](#iterators)
-        - [C-Style Arrays](#arrays)
-        - [r-Values](#r-val)
-        - [Initializer list](#init_lst)
-    - [Using an offset for index](#offset)
-    - [Reverse counting direction](#rev-count)
+        - [C-Style Arrays](#c-style-arrays)
+        - [r-Values](#r-values)
+        - [Initializer list](#initializer-list)
+    - [Using an offset for index](#using-an-offset-for-index)
+    - [Reverse counting direction](#reverse-counting-direction)
 
 *See also: [License (zlib)](LICENSE.md)*
 
