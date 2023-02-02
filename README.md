@@ -92,7 +92,7 @@ Simply use the `count(...)` function for everything. See [the documentation of t
     This is currently in development and will be added in the next few days.
 
 - #### Iterators
-    You can also use `std::iterators` to specify a range. This will print  only the first two elements of `vec`.
+    You can also use `std::iterator` to specify a range. This will print  only the first two elements of `vec`.
     ```cpp
     for(auto [value, index] : count(vec.begin(), vec.begin() + 2))
         std::cout << index << ": " << value << std::endl;
@@ -118,6 +118,7 @@ Simply use the `count(...)` function for everything. See [the documentation of t
     An `std::initializer_list` can also be used (l-Values and r-Values):
     ```cpp
     for(auto [value, index] : count({"L1", "L2", "L3"}))
+        std::cout << index << ": " << value << std::endl;
     ```
     
 ### Using an offset for index
@@ -141,7 +142,7 @@ The default offset value is zero.
 ```
 
 ### Reverse counting direction
-Currently in development. Will be added i8n the next few days.
+Currently in development. Will be added in the next few days.
 
 ## Count function overview
 The `count` function provides different overloads for usage with different types. The general usage is `count(Container, Offset, Reverse)`:
@@ -150,6 +151,8 @@ The `count` function provides different overloads for usage with different types
 
 In development:
 - ⚠️`Reverse` is a boolean to enable counting in reverse (start at highest element down to zero).
+
+The `count` function is a `constexpr`.
 
 ##### The overloads are:
 
