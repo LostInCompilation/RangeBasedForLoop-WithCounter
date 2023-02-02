@@ -58,7 +58,7 @@ int main()
     int arr[] = {42, 43, 44, 45, 46, 47};
     
     for(auto [value, index] : count(arr))
-        std::cout << index << ": " << value++ << std::endl;
+        std::cout << index << ": " << value << std::endl;
     
     std::cout << "-----------------------------------------------" << std::endl << std::endl;
     

@@ -31,7 +31,7 @@ for(auto [value, index] : count(vec))
     std::cout << index << ": " << value << std::endl; // Index will be incremented automatically
 ```
 
-Where `value` is of type `std::string&`, and `index` is of type `std::iterator_traits<std::vector<std::string>::iterator>::difference_type`, which can be implicitly casted to an `int`.
+Where `value` is of type `std::string&`, and `index` is of type `std::iterator_traits<std::vector<std::string>::iterator>::difference_type`, which can be implicitly cast to an `int`.
 
 ##### Console output:
 ```
