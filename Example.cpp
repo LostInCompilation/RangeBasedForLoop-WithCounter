@@ -58,12 +58,12 @@ int main()
     int arr[] = {42, 43, 44, 45, 46, 47};
     
     for(auto [value, index] : count(arr))
-        std::cout << index << ": " << value << std::endl;
+        std::cout << index << ": " << value++ << std::endl;
     
     std::cout << "-----------------------------------------------" << std::endl << std::endl;
     
     //*************************************************************
-    // Vector example (l-value)
+    // Vector example (l-value) with const reference
     std::vector<std::string> vec = {"A", "B", "C", "D", "E", "F", "G"};
     
     for(const auto& [value, index] : count(vec))
@@ -115,7 +115,7 @@ int main()
     RValueMoveExample(std::move(std::vector<int>{1, 2}));
     
     //*************************************************************
-    // Assoociative container example: Currently in development!
+    // Associative container example: Currently in development!
     //std::map<int, std::string> testMap;
     //for(auto [key, value, index] : count(testMap))
     //    std::cout << index << ": Map(" << key << ", " << value << ")" << std::endl;

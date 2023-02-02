@@ -1,8 +1,8 @@
 # Range-Based For Loop with counter variable
 
-###### Small single header utility to add an integer counter/index variable to C++ Range-Based For Loops. Full cross platform support.
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20anything%20else-blue?style=flat-square&&logo=Platform.sh) ![Version](https://img.shields.io/badge/Version-V0.9-brightgreen?style=flat-square&) ![CPP](https://img.shields.io/badge/Language-C++20-orange?style=flat-square&&logo=C%2b%2b)
 
-**Full functionality will be completed in the next days.**
+##### Small single header utility to add an integer counter/index variable to C++ Range-Based For Loops. Full cross platform support.
 
 ## Contents
 - [Simple example](#simple-example)
@@ -31,7 +31,7 @@ for(auto [value, index] : count(vec))
     std::cout << index << ": " << value << std::endl; // Index will be incremented automatically
 ```
 
-Where `value` is of type `std::string`, and `index` is of type `std::iterator_traits<std::vector<std::string>::iterator>::difference_type`, which can be implicitly casted to an `int`.
+Where `value` is of type `std::string&`, and `index` is of type `std::iterator_traits<std::vector<std::string>::iterator>::difference_type`, which can be implicitly casted to an `int`.
 
 ##### Console output:
 ```
@@ -47,7 +47,7 @@ You can basically use any STL-Container, `std::initializer_list` or custom types
 *Reverse counting (start index at number of elements in container and count down to zero) is currently in development and will be added shortly.*
 
 ### Motivation
-While declaring a separate counter variable just above the Range Based For Loop works, it adds quite some verbosity to the code. Also the counter variable's scope would be valid outside of the loop to, which can lead to some nasty name clashes.
+While declaring a separate counter variable right above the Range Based For Loop would work, it adds quite some verbosity to the code. Also the counter variable's scope would be valid outside of the loop to, which can lead to some nasty name clashes.
 With C++20 we got initialization in Range Based For Loops, but this also adds verbosity to the code by declaring a separate variable and incrementing it:
 ```cpp
 for (int index = 0; auto& value : vec)
@@ -84,7 +84,7 @@ Simply use the `count(...)` function for everything. See [the documentation of t
     ```cpp
     std::vector<std::string> vec = {"Element 1", "Element 2", "Element 3"};
 
-    for(auto [value, index] : count(vec))
+    for(const auto& [value, index] : count(vec))
         std::cout << index << ": " << value << std::endl;
     ```
 
