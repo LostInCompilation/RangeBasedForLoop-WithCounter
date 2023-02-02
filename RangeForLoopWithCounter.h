@@ -31,9 +31,6 @@
 #ifndef RANGE_FOR_LOOP_WITH_COUNTER_H
 #define RANGE_FOR_LOOP_WITH_COUNTER_H
 
-// Debug
-#include <iostream>
-
 #include <iterator>
 #include <vector>
 #include <initializer_list>
@@ -181,15 +178,12 @@ constexpr decltype(auto) count(ContainerType& container, const typename std::ite
     return IteratorCounterRange_lval(std::begin(container), std::end(container), offset);
 }
 
-
 //*******************************************************************************
 //*******************************************************************************
 // r-Value container
 template<typename ContainerType>
 constexpr decltype(auto) count(ContainerType&& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
 {
-    std::cout << "R-Value called!" << std::endl;
-
     return IteratorCounterRange_rval<ContainerType>(std::move(container), offset);
 }
 
