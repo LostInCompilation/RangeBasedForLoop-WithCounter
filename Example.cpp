@@ -30,71 +30,95 @@
  
 */
 
+// g++ -std=c++20 -o Example Example.cpp -fsanitize=address -static-libsan -g
+
+#include "RangeForLoopWithCounter.h"
+
 #include <iostream>
 #include <vector>
 #include <list>
+#include <map>
 
-#include "RangeForLoopWithCounter.h"
+// Move semantics example
+void RValueMoveExample(std::vector<int>&& v)
+{
+    for(auto [value, index] : count(std::move(v)))
+        std::cout << value << ": " << index << std::endl;
+    
+    std::cout << "-----------------------------------------------" << std::endl << std::endl;
+}
 
 int main()
 {
     std::cout << "Range-Based for loop with counter - Example" << std::endl;
+    std::cout << "-----------------------------------------------" << std::endl << std::endl;
     
     //*************************************************************
     // C-style array example
     int arr[] = {42, 43, 44, 45, 46, 47};
     
     for(auto [value, index] : count(arr))
-        std::cout << value << ": " << index << std::endl;
+        std::cout << index << ": " << value << std::endl;
     
-    std::cout << std::endl << std::endl;
+    std::cout << "-----------------------------------------------" << std::endl << std::endl;
     
     //*************************************************************
     // Vector example (l-value)
     std::vector<std::string> vec = {"A", "B", "C", "D", "E", "F", "G"};
     
-    for(auto [value, index] : count(vec))
-        std::cout << value << ": " << index << std::endl;
+    for(const auto& [value, index] : count(vec))
+        std::cout << index << ": " << value << std::endl;
     
-    std::cout << std::endl << std::endl;
+    std::cout << "-----------------------------------------------" << std::endl << std::endl;
     
     //*************************************************************
     // Iterator example
     for(auto [value, index] : count(vec.begin(), vec.begin() + 3))
-        std::cout << value << ": " << index << std::endl;
+        std::cout << index << ": " << value << std::endl;
     
-    std::cout << std::endl << std::endl;
+    std::cout << "-----------------------------------------------" << std::endl << std::endl;
     
     //*************************************************************
     // List example (l-value) with an offset of 100 (index start at 100)
     std::list<std::string> list = {"L1", "L2", "L3", "L4", "L5"};
     
     for(auto [value, index] : count(list, 100))
-        std::cout << value << ": " << index << std::endl;
+        std::cout << index << ": " << value << std::endl;
     
-    std::cout << std::endl << std::endl;
+    std::cout << "-----------------------------------------------" << std::endl << std::endl;
     
     //*************************************************************
     // Vector example (r-value)
     for(auto [value, index] : count(std::vector<std::string>{"X", "Y", "Z"}))
-        std::cout << value << ": " << index << std::endl;
+        std::cout << index << ": " << value << std::endl;
     
-    std::cout << std::endl << std::endl;
-    
+    std::cout << "-----------------------------------------------" << std::endl << std::endl;
     
     //*************************************************************
     // Initializer List example (l-value)
     std::initializer_list<int> init_lst = {5, 6, 7, 8, 9};
     
     for(auto [value, index] : count(init_lst))
-        std::cout << value << ": " << index << std::endl;
+        std::cout << index << ": " << value << std::endl;
     
-    std::cout << std::endl << std::endl;
+    std::cout << "-----------------------------------------------" << std::endl << std::endl;
     
     //*************************************************************
     // Initializer List example (r-value)
-    //for(auto [value, index] : count({10, 9, 8, 7, 6}))
-    //    std::cout << value << ": " << index << std::endl;
+    for(auto [value, index] : count({"R1", "R2", "R3", "R4", "R5"}))
+        std::cout << index << ": " << value << std::endl;
+    
+    std::cout << "-----------------------------------------------" << std::endl << std::endl;
+    
+    //*************************************************************
+    // Move semantics example
+    RValueMoveExample(std::move(std::vector<int>{1, 2}));
+    
+    //*************************************************************
+    // Assoociative container example: Currently in development!
+    //std::map<int, std::string> testMap;
+    //for(auto [key, value, index] : count(testMap))
+    //    std::cout << index << ": Map(" << key << ", " << value << ")" << std::endl;
     
     return 0;
 }

@@ -1,6 +1,6 @@
 # Range-Based For Loop with counter variable
 
-###### Small single header utility adding an integer counter/index variable to C++ Range-Based For Loops.
+###### Small single header utility to add an integer counter/index variable to C++ Range-Based For Loops. Full cross platform support.
 
 **Full functionality will be completed in the next days.**
 
@@ -19,6 +19,7 @@
         - [Initializer list](#initializer-list)
     - [Using an offset for index](#using-an-offset-for-index)
     - [Reverse counting direction](#reverse-counting-direction)
+- [Count function overview](#count-function-overview)
 
 *See also: [License (zlib)](LICENSE.md)*
 
@@ -30,6 +31,8 @@ for(auto [value, index] : count(vec))
     std::cout << index << ": " << value << std::endl; // Index will be incremented automatically
 ```
 
+Where `value` is of type `std::string`, and `index` is of type `std::iterator_traits<std::vector<std::string>::iterator>::difference_type`, which can be implicitly casted to an `int`.
+
 ##### Console output:
 ```
 0: Element 1
@@ -39,13 +42,13 @@ for(auto [value, index] : count(vec))
 
 ## Description
 With this small header utility you can easily add an index variable to Range Based For Loops, without any verbose code.
-You can basically use any STL-Container, `std::initialzer_list` or custom types derived from them. l-Values and r-Values are both supported. Additionally you can specifiy a counter offset, to start counting at a different value than zero.
+You can basically use any STL-Container, `std::initializer_list` or custom types derived from them. l-Values and r-Values are both supported. Additionally you can specify a counter offset, to start counting at a different value than zero.
 
-Reverse counting (start index at number of elements in container and count down to zero) is currently in development and will be added shortly.
+*Reverse counting (start index at number of elements in container and count down to zero) is currently in development and will be added shortly.*
 
 ### Motivation
-While declaring a seperate counter variable just above the Range Based For Loop works, it adds quite some verbosity to the code. Also the counter variable's scope would be valid outside of the loop to, which can lead to some nasty name clashes.
-With C++20 we got initialization in Range Based For Loops, but this also adds verbosity to the code by declaring a seperate variable and incrementing it:
+While declaring a separate counter variable just above the Range Based For Loop works, it adds quite some verbosity to the code. Also the counter variable's scope would be valid outside of the loop to, which can lead to some nasty name clashes.
+With C++20 we got initialization in Range Based For Loops, but this also adds verbosity to the code by declaring a separate variable and incrementing it:
 ```cpp
 for (int index = 0; auto& value : vec)
     i++; // Increment still needed
@@ -67,25 +70,49 @@ Type | Container | Supported |
 ## Usage
 
 ### Installation
-Include the `RangeForLoopWithCounter.h` header. Requires C++20.
+Include the `RangeForLoopWithCounter.h` header and you're ready to go. Requires C++20.
 
 ```cpp
 #include "RangeForLoopWithCounter.h"
 ```
-    
+
 ### Basic usage
+Simply use the `count(...)` function for everything. See [the documentation of the count function](#count-function-overview) down below for further info.
 
 - #### STL Container
-    aaa
+    Usage with STL-Containers is straightforward:
+    ```cpp
+    std::vector<std::string> vec = {"Element 1", "Element 2", "Element 3"};
+
+    for(auto [value, index] : count(vec))
+        std::cout << index << ": " << value << std::endl;
+    ```
+
+- #### Associative containers like `std::map`
+    This is currently in development and will be added in the next few days.
 
 - #### Iterators
-    bbb
+    You can also use `std::iterators` to specify a range. This will print  only the first two elements of `vec`.
+    ```cpp
+    for(auto [value, index] : count(vec.begin(), vec.begin() + 2))
+        std::cout << index << ": " << value << std::endl;
+    ```
 
 - #### C-Style Arrays
-    ccc
+    C-Style arrays can be used in the same way:
+    ```cpp
+    int arr[] = {42, 43, 44, 45, 46, 47};
+    
+    for(auto [value, index] : count(arr))
+        std::cout << index << ": " << value << std::endl;
+    ```
 
 - #### r-Values
-    ddd
+    The `count` function also fully supports r-Values and move semantics. However due to the design of Range Based For Loops in C++ (they destroy every temporary before actually running), `count` must become an *owning view* for r-Values. This means that what ever r-Value you pass to `count` will be copied inside of it.
+    ```cpp
+    for(auto [value, index] : count(std::vector<std::string>{"X", "Y", "Z"}))
+        std::cout << index << ": " << value << std::endl;
+    ```
 
 - #### Initializer list
     An `std::initializer_list` can also be used (l-Values and r-Values):
@@ -114,7 +141,44 @@ The default offset value is zero.
 ```
 
 ### Reverse counting direction
+Currently in development. Will be added i8n the next few days.
 
+## Count function overview
+The `count` function provides different overloads for usage with different types. The general usage is `count(Container, Offset, Reverse)`:
+- `Container` is any type of container or array.
+- `Offset` is the offset from which to start counting.
 
-## Additional notes
-Empty
+In development:
+- ⚠️`Reverse` is a boolean to enable counting in reverse (start at highest element down to zero).
+
+##### The overloads are:
+
+- C-Style arrays
+    ```cpp
+    template<typename T, std::size_t size>
+    count(T (&arr)[size], const std::ptrdiff_t& offset = 0)
+    ```
+
+- Iterators
+    ```cpp
+    template<typename IteratorType>
+    count(const IteratorType& first, const IteratorType& last, const typename std::iterator_traits<IteratorType>::difference_type& offset = 0)
+    ```
+
+- l-Value container and l-Value `std::initializer_list`
+    ```cpp
+    template<typename ContainerType>
+    count(ContainerType& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
+    ```
+
+- r-Value container
+    ```cpp
+    template<typename ContainerType>
+    count(ContainerType&& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
+    ```
+
+- r-Value `std::initializer_list`
+    ```cpp
+    template<typename T>
+    count(std::initializer_list<T>&& init_list, const std::ptrdiff_t& offset = 0)
+    ```

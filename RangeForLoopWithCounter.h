@@ -31,6 +31,9 @@
 #ifndef RANGE_FOR_LOOP_WITH_COUNTER_H
 #define RANGE_FOR_LOOP_WITH_COUNTER_H
 
+// Debug
+#include <iostream>
+
 #include <iterator>
 #include <vector>
 #include <initializer_list>
@@ -157,7 +160,7 @@ public:
 //*******************************************************************************
 // C-style array
 template<typename T, std::size_t size>
-decltype(auto) count(T (&arr)[size], const std::ptrdiff_t& offset = 0)
+constexpr decltype(auto) count(T (&arr)[size], const std::ptrdiff_t& offset = 0)
 {
     return IteratorCounterRange_lval(arr, arr + size, offset);
 }
@@ -165,7 +168,7 @@ decltype(auto) count(T (&arr)[size], const std::ptrdiff_t& offset = 0)
 //*******************************************************************************
 // Range
 template<typename IteratorType>
-decltype(auto) count(const IteratorType& first, const IteratorType& last, const typename std::iterator_traits<IteratorType>::difference_type& offset = 0)
+constexpr decltype(auto) count(const IteratorType& first, const IteratorType& last, const typename std::iterator_traits<IteratorType>::difference_type& offset = 0)
 {
     return IteratorCounterRange_lval(first, last, offset);
 }
@@ -173,7 +176,7 @@ decltype(auto) count(const IteratorType& first, const IteratorType& last, const 
 //*******************************************************************************
 // l-Value container and l-Value std::initializer_list
 template<typename ContainerType>
-decltype(auto) count(ContainerType& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
+constexpr decltype(auto) count(ContainerType& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
 {
     return IteratorCounterRange_lval(std::begin(container), std::end(container), offset);
 }
@@ -183,8 +186,10 @@ decltype(auto) count(ContainerType& container, const typename std::iterator_trai
 //*******************************************************************************
 // r-Value container
 template<typename ContainerType>
-decltype(auto) count(ContainerType&& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
+constexpr decltype(auto) count(ContainerType&& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
 {
+    std::cout << "R-Value called!" << std::endl;
+
     return IteratorCounterRange_rval<ContainerType>(std::move(container), offset);
 }
 
@@ -193,9 +198,9 @@ decltype(auto) count(ContainerType&& container, const typename std::iterator_tra
 // Needed, since copying a std::initializer_list is not adviseable.
 // The list will be assigned to a std::vector, which will get counted
 template<typename T>
-decltype(auto) count(std::initializer_list<T>&& lst, const std::ptrdiff_t& offset = 0)
+constexpr decltype(auto) count(std::initializer_list<T>&& init_list, const std::ptrdiff_t& offset = 0)
 {
-    return IteratorCounterRange_rval<std::initializer_list<T>>(std::move(lst), offset);
+    return IteratorCounterRange_rval<std::initializer_list<T>>(std::move(init_list), offset);
 }
 
 #endif
