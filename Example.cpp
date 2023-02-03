@@ -30,8 +30,6 @@
  
 */
 
-// g++ -std=c++20 -o Example Example.cpp -fsanitize=address -static-libsan -g
-
 #include "RangeForLoopWithCounter.h"
 
 #include <iostream>

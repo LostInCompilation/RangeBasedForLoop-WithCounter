@@ -13,13 +13,17 @@
     - [Installation](#installation)
     - [Basic usage](#basic-usage)
         - [STL Container](#stl-container)
+        - [Associative containers like `std::map`](#associative-containers-like-stdmap)
         - [Iterators](#iterators)
         - [C-Style Arrays](#c-style-arrays)
         - [r-Values](#r-values)
         - [Initializer list](#initializer-list)
     - [Using an offset for index](#using-an-offset-for-index)
     - [Reverse counting direction](#reverse-counting-direction)
-- [Count function overview](#count-function-overview)
+- [Count-function overview](#count-function-overview)
+    - [Parameters](#parameters)
+    - [Return type and variable types](#return-type)
+    - [Overloads](#overloads)
 
 *See also: [License (zlib)](LICENSE.md)*
 
@@ -31,7 +35,7 @@ for(auto [value, index] : count(vec))
     std::cout << index << ": " << value << std::endl; // Index will be incremented automatically
 ```
 
-Where `value` is of type `std::string&`, and `index` is of type `std::iterator_traits<std::vector<std::string>::iterator>::difference_type`, which can be implicitly cast to an `int`.
+Where `value` is of type `std::string&`, and `index` is of type `const std::iterator_traits<std::vector<std::string>::iterator>::difference_type&`, which can be implicitly cast to an `int`.
 
 ##### Console output:
 ```
@@ -47,7 +51,7 @@ You can basically use any STL-Container, `std::initializer_list` or custom types
 *Reverse counting (start index at number of elements in container and count down to zero) is currently in development and will be added shortly.*
 
 ### Motivation
-While declaring a separate counter variable right above the Range Based For Loop would work, it adds quite some verbosity to the code. Also the counter variable's scope would be valid outside of the loop to, which can lead to some nasty name clashes.
+While declaring a separate counter variable right above the Range Based For Loop would work, it adds quite some verbosity to the code. Also the counter variable's scope would be valid outside of the loop too, which can lead to some nasty name clashes.
 With C++20 we got initialization in Range Based For Loops, but this also adds verbosity to the code by declaring a separate variable and incrementing it:
 ```cpp
 for (int index = 0; auto& value : vec)
@@ -64,13 +68,13 @@ Type | Container | Supported |
 | C-Style Array | `int myArr[42];` | ✅ Yes |
 | Sequence | `std::array` <br> `std::vector` <br> `std::deque` <br> `std::forward_list` <br> `std::list` | ✅ Yes |
 | Associative | `std::set` <br> `std::map` <br> `std::multiset` <br> `std::multimap` <br> `std::unordered_set` <br> `std::unordered_map` <br> `std::unordered_multiset` <br> `std::unordered_multimap` | ⚠️ In development |
-| Adaptors | `std::stack` <br> `std::queue` <br> `std::priority_queue` <br> `std::flat_set` <br> `std::flat_map` <br> `std::flat_multiset` <br> `std::flat_multimap`| ⚠️ In development |
-| Special | `std::initializer_list` <br> `std::iterators` | ✅ Yes |
+| Adaptors | `std::stack` <br> `std::queue` <br> `std::priority_queue` <br> `std::flat_set` <br> `std::flat_map` <br> `std::flat_multiset` <br> `std::flat_multimap`| ❌ No<br>These types aren't iterable and don't support Range Based For Loops |
+| Special | `std::initializer_list` <br> `std::iterator` | ✅ Yes |
 
 ## Usage
 
 ### Installation
-Include the `RangeForLoopWithCounter.h` header and you're ready to go. Requires C++20.
+Include the `RangeForLoopWithCounter.h` header and you're ready to go. Requires **C++20**.
 
 ```cpp
 #include "RangeForLoopWithCounter.h"
@@ -89,7 +93,7 @@ Simply use the `count(...)` function for everything. See [the documentation of t
     ```
 
 - #### Associative containers like `std::map`
-    This is currently in development and will be added in the next few days.
+    ⚠️ This is currently in development and will be added in the next few days.
 
 - #### Iterators
     You can also use `std::iterator` to specify a range. This will print  only the first two elements of `vec`.
@@ -145,16 +149,21 @@ The default offset value is zero.
 Currently in development. Will be added in the next few days.
 
 ## Count function overview
-The `count` function provides different overloads for usage with different types. The general usage is `count(Container, Offset, Reverse)`:
-- `Container` is any type of container or array.
-- `Offset` is the offset from which to start counting.
-
-In development:
-- ⚠️`Reverse` is a boolean to enable counting in reverse (start at highest element down to zero).
-
+The `count` function provides different overloads and parameters for usage with different types and to adjust the behaviour of the counting.
 The `count` function is a `constexpr`.
 
-##### The overloads are:
+### Parameters
+The general usage is `count(Container, Offset=0, Reverse=false)`:
+- `Container` is any type of container or array.
+- `Offset` is the offset from where to start counting. Default is zero.
+
+**In development:**
+- ⚠️`Reverse` is a boolean to enable counting in reverse (start at highest element down to zero). Default is false (no reverse counting).
+
+### Return type and variable types
+return
+
+### Overloads
 
 - C-Style arrays
     ```cpp
