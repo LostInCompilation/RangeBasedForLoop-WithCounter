@@ -19,10 +19,12 @@
         - [r-Values](#r-values)
         - [Initializer list](#initializer-list)
     - [Using an offset for index](#using-an-offset-for-index)
-    - [Reverse counting direction](#reverse-counting-direction)
+    - [Reverse](#reverse)
+        - [Reverse index](#reverse-index)
+        - [Reverse elements](#reverse-elements)
 - [Count-function overview](#count-function-overview)
     - [Parameters](#parameters)
-    - [Return type and variable types](#return-type)
+    - [Return type and variable types](#return-type-and-variable-types)
     - [Overloads](#overloads)
 
 *See also: [License (zlib)](LICENSE.md)*
@@ -46,9 +48,9 @@ Where `value` is of type `std::string&`, and `index` is of type `const std::iter
 
 ## Description
 With this small header utility you can easily add an index variable to Range Based For Loops, without any verbose code.
-You can basically use any STL-Container, `std::initializer_list` or custom types derived from them. l-Values and r-Values are both supported. Additionally you can specify a counter offset, to start counting at a different value than zero.
-
-*Reverse counting (start index at number of elements in container and count down to zero) is currently in development and will be added shortly.*
+You can use any STL-Container, `std::initializer_list` or custom types derived from them. l-Values and r-Values are both supported.
+Additionally you can specify a **counter offset**, to start counting at a different value than zero (see [Using an offset](#using-an-offset-for-index)).
+**Reverse counting** is also supported in two different variants. Reversing the enumeration of the elements itself (start with last element in container) or just reverse the index variable (start index at number of elements in container and count down to zero). Both modes can be combined (see [Reverse](#reverse)).
 
 ### Motivation
 While declaring a separate counter variable right above the Range Based For Loop would work, it adds quite some verbosity to the code. Also the counter variable's scope would be valid outside of the loop too, which can lead to some nasty name clashes.
@@ -81,7 +83,7 @@ Include the `RangeForLoopWithCounter.h` header and you're ready to go. Requires 
 ```
 
 ### Basic usage
-Simply use the `count(...)` function for everything. See [the documentation of the count function](#count-function-overview) down below for further info.
+Simply use the `count(...)` or `rcount(...)` (reverse count) function for everything. See [the documentation of the count/rcount function](#count-function-overview) down below for further info.
 
 - #### STL Container
     Usage with STL-Containers is straightforward:
@@ -112,7 +114,7 @@ Simply use the `count(...)` function for everything. See [the documentation of t
     ```
 
 - #### r-Values
-    The `count` function also fully supports r-Values and move semantics. However due to the design of Range Based For Loops in C++ (they destroy every temporary before actually running), `count` must become an *owning view* for r-Values. This means that what ever r-Value you pass to `count` will be copied inside of it.
+    The `count` and `rcount` functions fully support r-Values and move semantics. However due to the design of Range Based For Loops in C++ (they destroy every temporary before actually running), `count` and `rcount` must become an *owning view* for r-Values. This means that what ever r-Value you pass to `count` or `rcount` will be copied inside of it.
     ```cpp
     for(auto [value, index] : count(std::vector<std::string>{"X", "Y", "Z"}))
         std::cout << index << ": " << value << std::endl;
@@ -127,7 +129,7 @@ Simply use the `count(...)` function for everything. See [the documentation of t
     
 ### Using an offset for index
 To use an offset for the counter variable, simply pass an offset to the 
-`count(Container, Offset)` function:
+`count(Container, Offset=0)` or `rcount(Container, Offset=0)` function:
 
 ```cpp
 std::vector<std::string> vec = {"Element 1", "Element 2", "Element 3"};
@@ -145,20 +147,25 @@ The default offset value is zero.
 44: Element 3
 ```
 
-### Reverse counting direction
-Currently in development. Will be added in the next few days.
+### Reverse
+There are two different types of reversing, which can also be combined:
+
+- #### Reverse index
+    index
+- #### Reverse elements
+    elements
+
+To combine both modes, use `rcount` with the last parameter (reverse index) set to true.
 
 ## Count function overview
-The `count` function provides different overloads and parameters for usage with different types and to adjust the behaviour of the counting.
-The `count` function is a `constexpr`.
+The `count` and `rcount` functions provide different overloads and parameters for usage with different types and to adjust the behaviour of the counting.
+The `count` and `rcount` functions are `constexpr`.
 
 ### Parameters
-The general usage is `count(Container, Offset=0, Reverse=false)`:
+The general usage is `count(Container, Offset=0, ReverseIndex=false)` and `rcount(Container, Offset=0, ReverseIndex=false)`:
 - `Container` is any type of container or array.
 - `Offset` is the offset from where to start counting. Default is zero.
-
-**In development:**
-- ⚠️`Reverse` is a boolean to enable counting in reverse (start at highest element down to zero). Default is false (no reverse counting).
+- `ReverseIndex` is a boolean to enable counting in reverse for the index (start at number of elements in container, counting down to zero). Default is false (no reverse index counting).
 
 ### Return type and variable types
 return
@@ -176,6 +183,8 @@ return
     template<typename IteratorType>
     count(const IteratorType& first, const IteratorType& last, const typename std::iterator_traits<IteratorType>::difference_type& offset = 0)
     ```
+
+    Note: There is no `rcount` function for iterators, since you can just pass a reverse iterator to the normal `count` function, which then behaves like `rcount`: `std::rbegin(...)` and `std::rend(...)`.
 
 - l-Value container and l-Value `std::initializer_list`
     ```cpp

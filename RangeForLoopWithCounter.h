@@ -32,6 +32,7 @@
 #define RANGE_FOR_LOOP_WITH_COUNTER_H
 
 #include <iterator>
+#include <span>
 #include <vector>
 #include <initializer_list>
 
@@ -42,21 +43,31 @@ private:
     using IndexType = typename std::iterator_traits<IteratorType>::difference_type;
     using IteratorReferenceType = typename std::iterator_traits<IteratorType>::reference;
     
-    IteratorType   iterator;
-    IndexType      counter;
+    IteratorType iterator;
+    IndexType    counter;
+    
+    bool         reverseIndex = false;
     
 public:
     IteratorCounter() = delete;
     
-    explicit IteratorCounter(const IteratorType& it, const IndexType& offset = 0)
+    explicit IteratorCounter(const IteratorType& it, const IndexType& offset, const std::size_t& containerSize, const bool& reverseIndex)
         : iterator(it)
         , counter(offset)
-    {}
+        , reverseIndex(reverseIndex)
+    {
+        if(reverseIndex)
+            counter += (containerSize - 1);
+    }
     
     IteratorCounter& operator++()
     {
         iterator++;
-        counter++;
+        
+        if(reverseIndex)
+            counter--;
+        else
+            counter++;
         
         return *this;
     }
@@ -80,17 +91,22 @@ protected:
     IteratorType last;
     IndexType    offset = 0;
     
+    std::size_t  containerSize = 0;
+    bool         reverseIndex = false;
+    
     IteratorCounterRange_lval() {}
     
 public:
-    explicit IteratorCounterRange_lval(IteratorType begin, IteratorType end, const IndexType& offset = 0)
+    explicit IteratorCounterRange_lval(IteratorType begin, IteratorType end, const IndexType& offset, const std::size_t& containerSize, const bool& reverseIndex)
         : first(begin)
         , last(end)
         , offset(offset)
+        , containerSize(containerSize)
+        , reverseIndex(reverseIndex)
     {}
     
-    Iterator begin() const { return Iterator(first, offset); }
-    Iterator end() const { return Iterator(last, offset); }
+    Iterator begin() const { return Iterator(first, offset, containerSize, reverseIndex); }
+    Iterator end() const { return Iterator(last, offset, containerSize, reverseIndex); }
 };
 
 
@@ -155,34 +171,49 @@ public:
 };
 
 //*******************************************************************************
-// C-style array
-template<typename T, std::size_t size>
-constexpr decltype(auto) count(T (&arr)[size], const std::ptrdiff_t& offset = 0)
+// Iterator
+template<typename IteratorType>
+constexpr decltype(auto) count(const IteratorType& first, const IteratorType& last, const typename std::iterator_traits<IteratorType>::difference_type& offset = 0, const bool& reverseIndex = false)
 {
-    return IteratorCounterRange_lval(arr, arr + size, offset);
+    return IteratorCounterRange_lval(first, last, offset, std::distance(first, last), reverseIndex);
 }
 
 //*******************************************************************************
-// Range
-template<typename IteratorType>
-constexpr decltype(auto) count(const IteratorType& first, const IteratorType& last, const typename std::iterator_traits<IteratorType>::difference_type& offset = 0)
+// C-style array
+template<typename T, std::size_t size>
+constexpr decltype(auto) count(T (&arr)[size], const std::ptrdiff_t& offset = 0, const bool& reverseIndex = false)
 {
-    return IteratorCounterRange_lval(first, last, offset);
+    //return IteratorCounterRange_lval(arr, arr + size, offset, size, reverseIndex);
+    return IteratorCounterRange_lval(std::begin(std::span<T>(arr)), std::end(std::span<T>(arr)), offset, size, reverseIndex);
+}
+
+template<typename T, std::size_t size>
+constexpr decltype(auto) rcount(T (&arr)[size], const std::ptrdiff_t& offset = 0, const bool& reverseIndex = false)
+{
+    return IteratorCounterRange_lval(std::rbegin(std::span<T>(arr)), std::rend(std::span<T>(arr)), offset, size, reverseIndex);
 }
 
 //*******************************************************************************
 // l-Value container and l-Value std::initializer_list
 template<typename ContainerType>
-constexpr decltype(auto) count(ContainerType& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
+constexpr decltype(auto) count(ContainerType& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0, const bool& reverseIndex = false)
 {
-    return IteratorCounterRange_lval(std::begin(container), std::end(container), offset);
+    return IteratorCounterRange_lval(std::begin(container), std::end(container), offset, container.size(), reverseIndex);
 }
 
-//*******************************************************************************
+template<typename ContainerType>
+constexpr decltype(auto) rcount(ContainerType& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0, const bool& reverseIndex = false)
+{
+    return IteratorCounterRange_lval(std::rbegin(container), std::rend(container), offset, container.size(), reverseIndex);
+}
+
+
+//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 //*******************************************************************************
 // r-Value container
 template<typename ContainerType>
-constexpr decltype(auto) count(ContainerType&& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0)
+constexpr decltype(auto) count(ContainerType&& container, const typename std::iterator_traits<typename ContainerType::iterator>::difference_type& offset = 0, const bool& reverseIndex = false)
 {
     return IteratorCounterRange_rval<ContainerType>(std::move(container), offset);
 }
@@ -192,7 +223,7 @@ constexpr decltype(auto) count(ContainerType&& container, const typename std::it
 // Needed, since copying a std::initializer_list is not adviseable.
 // The list will be assigned to a std::vector, which will get counted
 template<typename T>
-constexpr decltype(auto) count(std::initializer_list<T>&& init_list, const std::ptrdiff_t& offset = 0)
+constexpr decltype(auto) count(std::initializer_list<T>&& init_list, const std::ptrdiff_t& offset = 0, const bool& reverseIndex = false)
 {
     return IteratorCounterRange_rval<std::initializer_list<T>>(std::move(init_list), offset);
 }
