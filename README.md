@@ -70,8 +70,10 @@ Type | Container | Supported |
 | C-Style Array | `int myArr[42];` | ✅ Yes |
 | Sequence | `std::array` <br> `std::vector` <br> `std::deque` <br> `std::forward_list` <br> `std::list` | ✅ Yes |
 | Associative | `std::set` <br> `std::map` <br> `std::multiset` <br> `std::multimap` <br> `std::unordered_set` <br> `std::unordered_map` <br> `std::unordered_multiset` <br> `std::unordered_multimap` | ⚠️ In development |
-| Adaptors | `std::stack` <br> `std::queue` <br> `std::priority_queue` <br> `std::flat_set` <br> `std::flat_map` <br> `std::flat_multiset` <br> `std::flat_multimap`| ❌ No<br>These types aren't iterable and don't support Range Based For Loops |
+| Adaptors | `std::stack` <br> `std::queue` <br> `std::priority_queue` <br> `std::flat_set` <br> `std::flat_map` <br> `std::flat_multiset` <br> `std::flat_multimap`| ❌ No<br>These types aren't iterable and don't support Range Based For Loops[^1] |
 | Special | `std::initializer_list` <br> `std::iterator` | ✅ Yes |
+
+[^1]: You can use a workaround and copy, for example, a `std::queue` into a temporary `std::vector` which then can be used with the `count(...)` function. But this introduces run time overhead.
 
 ## Usage
 
