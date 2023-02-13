@@ -80,10 +80,12 @@ Type | Container | Supported |
 ## Usage
 
 ### Installation
-Include the `RangeForLoopWithCounter.h` header and you're ready to go. Requires **C++20**.
+Include the `RangeForLoopWithCounter.h` header and use the `RBFLCounter` namespace and you're good to go. Requires **C++20**.
 
 ```cpp
 #include "RangeForLoopWithCounter.h"
+
+using namespace RBFLCounter;
 ```
 
 ### Basic usage
