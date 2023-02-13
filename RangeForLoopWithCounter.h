@@ -2,6 +2,8 @@
  
  Range-Based for loop with counter variable
  
+ Version: V1.1
+ 
  ***********************************************************************************
  The zlib License
 
@@ -36,18 +38,22 @@
 #include <vector>
 #include <initializer_list>
 
+//*******************************************************************************
 // Settings
-//#define RBFL_FORCE_64BIT_COUNTER
-#define RBFL_ENABLE_SIGNED_COUNTER // Only enable if you absolutely know what you're doing. For 64Bit not really an issue, but smaller types can result in overflows if handled incorrectly
+// Force using 64 bit integers for offsets and counters. If disabled, platform specific maximum size is used (std::size_t or std::ptrdiff_t for signed support).
+#define RBFL_FORCE_64BIT_COUNTER
 
-#if defined(RBFL_ENABLE_SIGNED_COUNTER) && !defined(RBFL_FORCE_64BIT_COUNTER)
-#pragma message ("Pragma warning")
-#endif
+// Only enable if RBFL_FORCE_64BIT_COUNTER is enabled or you absolutely know what you're doing.
+// If you enable this setting without RBFL_FORCE_64BIT_COUNTER, it is possible that the index counter variable
+// overflows when using very large containers or arrays.
+#define RBFL_ENABLE_SIGNED_COUNTER
 
 
+//*******************************************************************************
 // Range Based For Loop with Counter implementation
 namespace RBFLCounter
 {
+// Counter and offset variable type
 #ifdef RBFL_FORCE_64BIT_COUNTER
     #ifdef RBFL_ENABLE_SIGNED_COUNTER
         using IndexType = int64_t;
@@ -144,7 +150,7 @@ concept ContainerIsNotInitializerList = not ContainerIsInitializerList<Container
 template<typename ContainerType, typename IteratorType, typename ContainerValueType = typename ContainerType::value_type>
 class IteratorCounterRange_rval;
 
-// For r-Values, not std::initializer_list<T>
+// For r-Value containers, which are not std::initializer_list<T>
 template<ContainerIsNotInitializerList ContainerType, typename IteratorType, typename ContainerValueType>
 requires std::is_same_v<ContainerValueType, typename ContainerType::value_type> and (std::is_same_v<IteratorType, typename ContainerType::iterator> or std::is_same_v<IteratorType, typename ContainerType::reverse_iterator>)
 class IteratorCounterRange_rval<ContainerType, IteratorType, ContainerValueType> : public IteratorCounterRange_lval<IteratorType>
@@ -174,11 +180,11 @@ public:
     }
 };
 
-// For r-Value std::initializer_list<T>. Special case since copying std::initializer_list is not advisable because of it's special properties.
-// Use a std::vector<T> and it's iterator as the owning type.
+// For r-Value std::initializer_list<T>. This is a special case, since copying std::initializer_list<T> into another one is not advisable because of it's special properties.
+// Use a std::vector<T> and its iterator as the owning type.
 template<ContainerIsInitializerList ContainerType, typename IteratorType, typename ContainerValueType>
 requires std::is_same_v<ContainerValueType, typename ContainerType::value_type> and (std::is_same_v<IteratorType, typename std::vector<ContainerValueType>::iterator> or std::is_same_v<IteratorType, typename std::vector<ContainerValueType>::reverse_iterator>)
-class IteratorCounterRange_rval<ContainerType, IteratorType, ContainerValueType> : public IteratorCounterRange_lval<IteratorType/*typename std::vector<ContainerValueType>::iterator*/>
+class IteratorCounterRange_rval<ContainerType, IteratorType, ContainerValueType> : public IteratorCounterRange_lval<IteratorType>
 {
 private:
     std::vector<ContainerValueType> owner; // std::initializer_list<ContainerValueType> will be copied into this std::vector<ContainerValueType>

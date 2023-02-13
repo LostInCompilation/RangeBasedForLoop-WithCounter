@@ -1,6 +1,8 @@
 # Range-Based For Loop with counter variable
 
-![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20anything%20else-blue?style=flat-square&&logo=Platform.sh) ![Version](https://img.shields.io/badge/Version-V0.9-brightgreen?style=flat-square&) ![CPP](https://img.shields.io/badge/Language-C++20-orange?style=flat-square&&logo=C%2b%2b)
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20anything%20else-blue?style=flat-square&&logo=Platform.sh) ![Version](https://img.shields.io/badge/Version-V1.1-brightgreen?style=flat-square&) ![CPP](https://img.shields.io/badge/Language-C++20-orange?style=flat-square&&logo=C%2b%2b)
+
+###### ⚠️ README will be updated for the new version tomorrow.
 
 ##### Small single header utility to add an integer counter/index variable to C++ Range-Based For Loops. Full cross platform support.
 
@@ -69,7 +71,7 @@ Type | Container | Supported |
 | -- | --------- | --------- |
 | C-Style Array | `int myArr[42];` | ✅ Yes |
 | Sequence | `std::array` <br> `std::vector` <br> `std::deque` <br> `std::forward_list` <br> `std::list` | ✅ Yes |
-| Associative | `std::set` <br> `std::map` <br> `std::multiset` <br> `std::multimap` <br> `std::unordered_set` <br> `std::unordered_map` <br> `std::unordered_multiset` <br> `std::unordered_multimap` | ⚠️ In development |
+| Associative | `std::set` <br> `std::map` <br> `std::multiset` <br> `std::multimap` <br> `std::unordered_set` <br> `std::unordered_map` <br> `std::unordered_multiset` <br> `std::unordered_multimap` | ✅ Yes |
 | Adaptors | `std::stack` <br> `std::queue` <br> `std::priority_queue` <br> `std::flat_set` <br> `std::flat_map` <br> `std::flat_multiset` <br> `std::flat_multimap`| ❌ No<br>These types aren't iterable and don't support Range Based For Loops[^1] |
 | Special | `std::initializer_list` <br> `std::iterator` | ✅ Yes |
 
@@ -97,7 +99,7 @@ Simply use the `count(...)` or `rcount(...)` (reverse count) function for everyt
     ```
 
 - #### Associative containers like `std::map`
-    ⚠️ This is currently in development and will be added in the next few days.
+    ⚠️ Supported. README will be updated soon.
 
 - #### Iterators
     You can also use `std::iterator` to specify a range. This will print  only the first two elements of `vec`.
