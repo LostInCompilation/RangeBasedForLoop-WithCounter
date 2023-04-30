@@ -96,7 +96,7 @@ Simply use the `count(...)` or `rcount(...)` (reverse count) function for everyt
     ```cpp
     std::vector<std::string> vec = {"Element 1", "Element 2", "Element 3"};
 
-    for(const auto& [value, index] : count(vec))
+    for(auto [value, index] : count(vec))
         std::cout << index << ": " << value << std::endl;
     ```
 
