@@ -2,7 +2,7 @@
 
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20anything%20else-blue?style=flat-square&&logo=Platform.sh) ![Version](https://img.shields.io/badge/Version-V1.1-brightgreen?style=flat-square&) ![CPP](https://img.shields.io/badge/Language-C++20-orange?style=flat-square&&logo=C%2b%2b)
 
-###### ⚠️ README will be updated for the new version tomorrow.
+###### ⚠️ README will be updated for the new version soon.
 
 ##### Small single header utility to add an integer counter/index variable to C++ Range-Based For Loops. Full cross platform support.
 
